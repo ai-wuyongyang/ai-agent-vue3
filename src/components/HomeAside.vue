@@ -6,14 +6,12 @@
           <ElementPlus />
         </el-icon>
       </button>
-
       <button v-if="!collapsed" class="toggle-button" type="button" @click="emit('toggle')">
         <el-icon size="20">
           <Fold />
         </el-icon>
       </button>
     </div>
-
     <div v-if="!collapsed" class="side-main"></div>
     <div v-if="!collapsed" class="side-footer"></div>
   </el-aside>
