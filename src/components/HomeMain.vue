@@ -1,16 +1,12 @@
 <template>
   <el-main class="home-main">
+    <div class="top-bar">
+      <el-select v-model="selectedModel" class="model-select" placeholder="请选择模型">
+        <el-option v-for="item in modelOptions" :key="item.value" :label="item.label" :value="item.value" />
+      </el-select>
+    </div>
+
     <div class="chat-shell">
-      <div class="chat-header">
-        <el-select v-model="selectedModel" class="model-select" placeholder="请选择模型">
-          <el-option v-for="item in modelOptions" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-
-        <el-button text type="primary" :icon="RefreshRight" @click="resetConversation">
-          重置对话
-        </el-button>
-      </div>
-
       <BubbleList ref="bubbleListRef" class="chat-list" :list="messages" max-height="calc(100vh - 240px)"
         :auto-scroll="true" :show-back-button="true" />
 
@@ -23,7 +19,6 @@
 
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, ref } from 'vue'
-import { RefreshRight } from '@element-plus/icons-vue'
 import { BubbleList, XSender } from 'vue-element-plus-x'
 
 interface ChatMessage {
@@ -59,16 +54,7 @@ const modelOptions = [
   { label: 'Claude 3.5 Sonnet', value: 'claude-3-5-sonnet' },
   { label: 'DeepSeek Chat', value: 'deepseek-chat' },
 ]
-const messages = ref<ChatMessage[]>([
-  {
-    id: 1,
-    role: 'assistant',
-    placement: 'start',
-    variant: 'borderless',
-    content:
-      '你好，我是一个前端模拟的 AI 助手。你发送消息后，我会像真实 AI 一样逐段输出内容。',
-  },
-])
+const messages = ref<ChatMessage[]>([])
 
 let messageId = messages.value.length
 let streamTimer: number | null = null
@@ -172,24 +158,6 @@ const handleSubmit = () => {
   streamAssistantReply(text)
 }
 
-const resetConversation = () => {
-  stopStreamingTimer()
-  isStreaming.value = false
-  messages.value = [
-    {
-      id: 1,
-      role: 'assistant',
-      placement: 'start',
-      variant: 'borderless',
-      content:
-        '你好，我是一个前端模拟的 AI 助手。你发送消息后，我会像真实 AI 一样逐段输出内容。',
-    },
-  ]
-  messageId = messages.value.length
-  senderRef.value?.clear()
-  scrollToBottom()
-}
-
 onBeforeUnmount(() => {
   stopStreamingTimer()
 })
@@ -200,6 +168,14 @@ onBeforeUnmount(() => {
   height: 100%;
   padding: 24px;
   background: #f5f7fa;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
 }
 
 .chat-shell {
@@ -209,13 +185,6 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-.chat-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
 }
 
 .model-select {
