@@ -82,6 +82,24 @@ const codeBlockProps = {
   showCopyButton: true,
   showExpandButton: true,
   showCollapseButton: true,
+  showTooltips: true,
+  showPreviewButton: false,
+  monacoOptions: {
+    readOnly: true,
+    wordWrap: 'on',
+    fontSize: 13,
+    lineHeight: 22,
+    minimap: {
+      enabled: false,
+    },
+    padding: {
+      top: 14,
+      bottom: 14,
+    },
+    scrollBeyondLastLine: false,
+    automaticLayout: true,
+    fontFamily: "'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace",
+  },
 }
 const messages = ref<ChatMessage[]>([])
 
@@ -385,6 +403,14 @@ onBeforeUnmount(() => {
 .message-markdown :deep(pre) {
   overflow-x: auto;
   border-radius: 12px;
+  border: 1px solid #ebeef5;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.message-markdown :deep(pre code) {
+  font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.7;
 }
 
 .message-markdown :deep(blockquote) {
@@ -408,5 +434,13 @@ onBeforeUnmount(() => {
 
 .message-markdown :deep(th) {
   background: #f5f7fa;
+}
+
+.message-bubble--assistant .message-markdown :deep(pre) {
+  margin-bottom: 14px;
+}
+
+.message-bubble--assistant .message-markdown :deep(table) {
+  background: #ffffff;
 }
 </style>
